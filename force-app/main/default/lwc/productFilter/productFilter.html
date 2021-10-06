@@ -1,0 +1,33 @@
+<template>
+  <lightning-layout horizontal-align="spread">
+    <template if:true={error}
+      ><p>There was an error fetching categories</p></template
+    >
+    <template if if:false={error}>
+      <lightning-layout-item size="3" padding="horizontal-small">
+        <lightning-combobox
+          name="category"
+          label="category"
+          value={selectedCategory}
+          placeholder="All categories"
+          options={categories}
+          variant="label-hidden"
+          onchange={handleCategoryChange}
+        >
+        </lightning-combobox>
+      </lightning-layout-item>
+    </template>
+    <lightning-layout-item size="3" padding="horizontal-small">
+      <lightning-combobox
+        name="price"
+        label="price"
+        value={priceOption}
+        placeholder="Filter by price"
+        options={priceOptions}
+        variant="label-hidden"
+        onchange={handlePriceChange}
+      >
+      </lightning-combobox>
+    </lightning-layout-item>
+  </lightning-layout>
+</template>
