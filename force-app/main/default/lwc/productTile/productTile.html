@@ -1,0 +1,11 @@
+<template>
+  <div>
+    <img src={product.Image__c} alt="product Image" />
+    <p>{product.Name}</p>
+    <p class="slds-m-vertical_small"><strong>€ {product.Price__c}</strong></p>
+    <lightning-button
+      label="Add to Cart"
+      variant="brand-outline"
+    ></lightning-button>
+  </div>
+</template>

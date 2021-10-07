@@ -1,7 +1,23 @@
 <template>
   <div>
     <lightning-card title="Filter products">
-      <c-product-filter></c-product-filter>
+      <c-product-filter
+        onselectedcategory={handleSelectedCategory}
+        onselectedprice={handleSelectedPrice}
+      ></c-product-filter>
     </lightning-card>
+    <template if:true={error}>
+      <lightning-card
+        title="Sorry couldn't get products. Try again later"
+      ></lightning-card>
+    </template>
+    <template if:true={products}>
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_4-of-5">
+          <c-product-list products={products}></c-product-list>
+        </div>
+        <div class="slds-col slds-size_1-of-5">cart</div>
+      </div>
+    </template>
   </div>
 </template>

@@ -1,0 +1,20 @@
+<template>
+  <lightning-card title="Products">
+    <lightning-layout multiple-rows class="slds-grid sldx-gutters">
+      <template if:true={products}>
+        <template for:each={products} for:item="product">
+          <lightning-layout-item
+            key={product.Id}
+            size="12"
+            large-device-size="3"
+            medium-device-size="3"
+            small-device-size="6"
+            class="slds-col slds-m-bottom_x-small"
+          >
+            <c-product-tile product={product}></c-product-tile>
+          </lightning-layout-item>
+        </template>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+</template>
