@@ -1,0 +1,23 @@
+<template>
+  <div class="slds-grid slds-gutters slds-border_bottom slds-m-bottom_x-small">
+    <div class="slds-col">
+      <span>{cartItem.Name}</span>
+    </div>
+    <div class="slds-col">
+      <span>€ {cartItem.Price__c}</span>
+    </div>
+    <div class="slds-col">
+      <span>Qty: {cartItem.quantity} </span>
+    </div>
+    <div class="slds-col">
+      <span>
+        <lightning-button-icon
+          icon-name="utility:delete"
+          variant="border-filled"
+          alternative-text="Delete"
+          title="Delete"
+        ></lightning-button-icon>
+      </span>
+    </div>
+  </div>
+</template>

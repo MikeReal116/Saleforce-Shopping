@@ -1,0 +1,13 @@
+<template>
+  <lightning-card title="Your Cart" icon-name="utility:cart">
+    <div class="slds-p-around_small">
+      <p><strong>Your cart, </strong>{totalProductsQuantity} item(s)</p>
+      <p class="slds-m-bottom_small">
+        <strong>Sub-total: </strong>€ {totalPrice}
+      </p>
+      <template for:each={cartItems} for:item="cartItem">
+        <c-cart-item key={cartItem.Id} cart-item={cartItem}></c-cart-item>
+      </template>
+    </div>
+  </lightning-card>
+</template>
