@@ -52,6 +52,16 @@ export default class ProductMain extends LightningElement {
     }
   }
 
+  handleRemoveFromCart(event) {
+    this.cartItems = this.cartItems.filter(
+      (product) => product.Id !== event.detail
+    );
+  }
+
+  handleClearCart() {
+    this.cartItems = [];
+  }
+
   get productInCart() {
     if (this.cartItems.length) {
       return true;
