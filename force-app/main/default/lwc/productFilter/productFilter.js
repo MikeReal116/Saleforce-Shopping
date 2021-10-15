@@ -7,7 +7,7 @@ export default class ProductFilter extends LightningElement {
   priceOption = 'ASC';
   error = false;
 
-  //fetch category Id and Name Apex class
+  //fetch category Id and Name from Apex class
   @wire(getCategories)
   wiredCategories({ error, data }) {
     if (data) {
@@ -25,6 +25,7 @@ export default class ProductFilter extends LightningElement {
     }
   }
 
+  //dispatch the category Id to parent
   handleCategoryChange(event) {
     this.selectedCategory = event.detail.value;
     const selectedCategoryEvent = new CustomEvent('selectedcategory', {
@@ -33,6 +34,7 @@ export default class ProductFilter extends LightningElement {
     this.dispatchEvent(selectedCategoryEvent);
   }
 
+  //dispatch the selected price filter to parent
   handlePriceChange(event) {
     this.priceOption = event.detail.value;
     const selectedPriceEvent = new CustomEvent('selectedprice', {

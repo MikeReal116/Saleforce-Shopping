@@ -1,6 +1,9 @@
 <template>
   <lightning-card title="Products">
-    <lightning-layout multiple-rows class="slds-grid sldx-gutters">
+    <lightning-layout
+      multiple-rows
+      class="slds-grid slds-gutters slds-p-around_x-small"
+    >
       <template if:true={products}>
         <template for:each={products} for:item="product">
           <lightning-layout-item

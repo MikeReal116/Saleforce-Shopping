@@ -4,6 +4,7 @@ public with sharing class ProductsController {
     public static List<Product__c> getProducts(String categoryId, String priceFilter){
         try {
             String queryString = '';
+            //fetch all products if no product category is given else fetch based on received id
             if(String.isBlank(categoryId)){
                 queryString = 'SELECT Id, Name, Price__c, Image__c FROM Product__c ORDER BY Price__c ' + priceFilter;
                 List<Product__c> myProducts = Database.query(queryString);

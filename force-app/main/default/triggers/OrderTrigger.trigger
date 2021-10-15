@@ -5,7 +5,7 @@ trigger OrderTrigger on Order__c (after insert, after update) {
             List<Task> tasks = new List<Task>();
 
             for(Order__c order: Trigger.new){
-                Task taskToDo = new Task(Status='Not Started', Priority='High', Subject='Other', Description='New order received that needs attention' );
+                Task taskToDo = new Task(Status='Not Started', Priority='High', Subject='Other', Description='New order received that needs attention', ActivityDate = System.today() + 7 );
                 tasks.add(taskToDo);
             }
             insert tasks;

@@ -1,55 +1,57 @@
 <template>
-  <lightning-card title="Your Cart" icon-name="utility:cart">
-    <div class="slds-p-around_small">
-      <p><strong>Your cart, </strong>{totalProductsQuantity} item(s)</p>
-      <p class="slds-m-bottom_small">
-        <strong>Sub-total: </strong>€ {totalPrice}
-      </p>
-      <template for:each={cartItems} for:item="cartItem">
-        <c-cart-item
-          key={cartItem.Id}
-          cart-item={cartItem}
-          onremovefromcart={handleRemoveFromCart}
-        ></c-cart-item>
-      </template>
-
-      <div class="slds-m-top_large slds-p-around_x-small">
-        <lightning-input
-          label="Address"
-          placeholder="Enter Address"
-          variant="label-hidden"
-          value={address.Address__c}
-          name="Address__c"
-          onchange={handleAddressChange}
-          class="slds-m-bottom_x-small"
-        ></lightning-input>
-        <lightning-input
-          label="Postal code"
-          placeholder="Enter Postal Code"
-          variant="label-hidden"
-          value={address__Postal_Code__c}
-          name="Postal_Code__c"
-          onchange={handleAddressChange}
-          class="slds-m-bottom_x-small"
-        ></lightning-input>
-        <lightning-input
-          label="Country"
-          placeholder="Enter Country"
-          variant="label-hidden"
-          value={address.Country__c}
-          name="Country__c"
-          onchange={handleAddressChange}
-          class="slds-m-bottom_x-small"
-        ></lightning-input>
-        <template if:true={showButton}>
-          <lightning-button
-            label="Checkout"
-            class="slds-m-top_small"
-            variant="brand"
-            onclick={handleCreateOrder}
-          ></lightning-button>
+  <template if:true={productInCart}>
+    <lightning-card title="Your Cart" icon-name="utility:cart">
+      <div class="slds-p-around_small">
+        <p><strong>Your cart, </strong>{totalProductsQuantity} item(s)</p>
+        <p class="slds-m-bottom_small">
+          <strong>Sub-total: </strong>€ {totalPrice}
+        </p>
+        <template for:each={cartItems} for:item="cartItem">
+          <c-cart-item
+            key={cartItem.Id}
+            cart-item={cartItem}
+            onremovefromcart={handleRemoveFromCart}
+          ></c-cart-item>
         </template>
+
+        <div class="slds-m-top_large slds-p-around_x-small">
+          <lightning-input
+            label="Address"
+            placeholder="Enter Address"
+            variant="label-hidden"
+            value={address.Address__c}
+            name="Address__c"
+            onchange={handleAddressChange}
+            class="slds-m-bottom_x-small"
+          ></lightning-input>
+          <lightning-input
+            label="Postal code"
+            placeholder="Enter Postal Code"
+            variant="label-hidden"
+            value={address__Postal_Code__c}
+            name="Postal_Code__c"
+            onchange={handleAddressChange}
+            class="slds-m-bottom_x-small"
+          ></lightning-input>
+          <lightning-input
+            label="Country"
+            placeholder="Enter Country"
+            variant="label-hidden"
+            value={address.Country__c}
+            name="Country__c"
+            onchange={handleAddressChange}
+            class="slds-m-bottom_x-small"
+          ></lightning-input>
+          <template if:true={showButton}>
+            <lightning-button
+              label="Make an order"
+              class="slds-m-top_small"
+              variant="brand"
+              onclick={handleCreateOrder}
+            ></lightning-button>
+          </template>
+        </div>
       </div>
-    </div>
-  </lightning-card>
+    </lightning-card>
+  </template>
 </template>

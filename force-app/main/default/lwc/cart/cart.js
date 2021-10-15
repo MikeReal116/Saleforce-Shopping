@@ -1,20 +1,58 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
+import { subscribe, MessageContext } from 'lightning/messageService';
 import CreateOrder from '@salesforce/apex/OrderContoller.createOrder';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import CART_ITEM_CHANNEL from '@salesforce/messageChannel/cartItem__c';
 
 export default class Cart extends LightningElement {
-  @api cartItems;
+  @track cartItems = [];
   address = {
     Address__c: '',
     Postal_Code__c: '',
     Country__c: ''
   };
 
+  subcription = null;
+  receivedMessage;
+
+  @wire(MessageContext)
+  messageContext;
+
+  //subscribe to the message channel
+  subscribeToMessageChannel() {
+    this.subcription = subscribe(
+      this.messageContext,
+      CART_ITEM_CHANNEL,
+      (message) => {
+        this.handleMessage(message);
+      }
+    );
+  }
+
+  //handles data received from the message channel to add to cart
+  handleMessage(message) {
+    const productIndex = this.cartItems.findIndex(
+      (product) => product.Id === message.Id
+    );
+
+    if (productIndex === -1) {
+      this.cartItems.push({ ...message, quantity: 1 });
+    } else {
+      this.cartItems[productIndex].quantity =
+        this.cartItems[productIndex].quantity + 1;
+    }
+    console.log(message);
+  }
+
+  connectedCallback() {
+    this.subscribeToMessageChannel();
+  }
+
+  //Receives the Id of the product to remove filters it from cartItems
   handleRemoveFromCart(event) {
-    const removeFromCartEvent = new CustomEvent('removefromcart', {
-      detail: event.detail
-    });
-    this.dispatchEvent(removeFromCartEvent);
+    this.cartItems = this.cartItems.filter(
+      (product) => product.Id !== event.detail
+    );
   }
 
   handleAddressChange(event) {
@@ -37,18 +75,19 @@ export default class Cart extends LightningElement {
       });
     });
     try {
-      const res = await CreateOrder({
+      await CreateOrder({
         orderDetails: orderDetail,
         orderLineDetails: JSON.stringify(orderLineItems)
       });
-      this.dispatchEvent(new CustomEvent('clearcart'));
+
+      this.handleClearCart();
+
       this.showToast('Success', `Order was successfully made`, 'success');
       this.address = {
         Address__c: '',
         Postal_Code__c: '',
         Country__c: ''
       };
-      console.log(res);
     } catch (error) {
       console.log(error);
       this.showToast('Error', `Order wasn't made, try again later`, 'error');
@@ -65,15 +104,21 @@ export default class Cart extends LightningElement {
   }
 
   get totalProductsQuantity() {
-    return this.cartItems.reduce((acc, cur) => {
-      return acc + cur.quantity;
-    }, 0);
+    if (this.cartItems) {
+      return this.cartItems.reduce((acc, cur) => {
+        return acc + cur.quantity;
+      }, 0);
+    }
+    return 0;
   }
 
   get totalPrice() {
-    return this.cartItems.reduce((acc, cur) => {
-      return acc + cur.quantity * cur.Price__c;
-    }, 0);
+    if (this.cartItems) {
+      return this.cartItems.reduce((acc, cur) => {
+        return acc + cur.quantity * cur.Price__c;
+      }, 0);
+    }
+    return 0;
   }
 
   get showButton() {
@@ -85,5 +130,16 @@ export default class Cart extends LightningElement {
       return true;
     }
     return false;
+  }
+
+  get productInCart() {
+    if (this.cartItems.length) {
+      return true;
+    }
+    return false;
+  }
+
+  handleClearCart() {
+    this.cartItems = [];
   }
 }

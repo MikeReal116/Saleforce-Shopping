@@ -1,14 +1,15 @@
-import { LightningElement, wire, track } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import { publish, MessageContext } from 'lightning/messageService';
 import getProducts from '@salesforce/apex/ProductsController.getProducts';
+import CART_ITEM_CHANNEL from '@salesforce/messageChannel/cartItem__c';
 
 export default class ProductMain extends LightningElement {
   selectedCategory = '';
   selectedPrice = 'ASC';
   error = false;
-  @track cartItems = [];
   products;
 
-  //$ to make variables reactive and call apex class to get new set of data on change
+  //fetch products based on filter values
   @wire(getProducts, {
     categoryId: '$selectedCategory',
     priceFilter: '$selectedPrice'
@@ -23,14 +24,20 @@ export default class ProductMain extends LightningElement {
     }
   }
 
+  @wire(MessageContext)
+  messageContext;
+
+  //respond to dispatched selectedcategory event
   handleSelectedCategory(event) {
     this.selectedCategory = event.detail;
   }
 
+  //respond to dispatched selectedprice event
   handleSelectedPrice(event) {
     this.selectedPrice = event.detail;
   }
 
+  //receives Id of the selected to add to cart
   handleAddToCart(event) {
     if (this.products) {
       const productToAddToCart = this.products.find(
@@ -39,33 +46,14 @@ export default class ProductMain extends LightningElement {
 
       if (!productToAddToCart) return;
 
-      const productIndex = this.cartItems.findIndex(
-        (product) => product.Id === productToAddToCart.Id
-      );
+      //prepares the expected data to publish it to the message channel
+      const payload = {
+        Name: productToAddToCart.Name,
+        Price__c: productToAddToCart.Price__c,
+        Id: productToAddToCart.Id
+      };
 
-      if (productIndex === -1) {
-        this.cartItems.push({ ...productToAddToCart, quantity: 1 });
-      } else {
-        this.cartItems[productIndex].quantity =
-          this.cartItems[productIndex].quantity + 1;
-      }
+      publish(this.messageContext, CART_ITEM_CHANNEL, payload);
     }
-  }
-
-  handleRemoveFromCart(event) {
-    this.cartItems = this.cartItems.filter(
-      (product) => product.Id !== event.detail
-    );
-  }
-
-  handleClearCart() {
-    this.cartItems = [];
-  }
-
-  get productInCart() {
-    if (this.cartItems.length) {
-      return true;
-    }
-    return false;
   }
 }

@@ -12,23 +12,10 @@
       ></lightning-card>
     </template>
     <template if:true={products}>
-      <div class="slds-grid slds-gutters">
-        <div class="slds-col slds-size_4-of-5">
-          <c-product-list
-            products={products}
-            onaddtocart={handleAddToCart}
-          ></c-product-list>
-        </div>
-        <template if:true={productInCart}>
-          <div class="slds-col slds-size_1-of-5">
-            <c-cart
-              cart-items={cartItems}
-              onremovefromcart={handleRemoveFromCart}
-              onclearcart={handleClearCart}
-            ></c-cart>
-          </div>
-        </template>
-      </div>
+      <c-product-list
+        products={products}
+        onaddtocart={handleAddToCart}
+      ></c-product-list>
     </template>
   </div>
 </template>
